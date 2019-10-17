@@ -1,3 +1,6 @@
+/* .column {
+  border: 1px solid red;
+} */
 .App {
   text-align: center;
 }
@@ -5,7 +8,6 @@
 .App-logo {
   height: 40vmin;
 }
-
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -19,4 +21,26 @@
 
 .App-link {
   color: #09d3ac;
+}
+.container {
+  margin-top: 5vh;
+  padding: 2%;
+}
+.row {
+  background-color: #fff;
+  display: flex;
+  margin-bottom: 3vh;
+}
+.column{
+  margin-top: 2vh;
+}
+.card-title{
+  min-height: 10vh;
+  margin: 0;
+}
+.card-body{
+  padding: 2px;
+}
+.card-text{
+  padding-bottom: 2px;
 }

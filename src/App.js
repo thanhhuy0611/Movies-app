@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Navbar, NavDropdown, Collapse, ListGroupItem, Nav, Form, FormControl, Button, Row, Col, Container, Card, ListGroup, } from 'react-bootstrap';
 import './App.css';
 
+
 function Example(props) {
   const [open, setOpen] = useState(false);
 
@@ -33,45 +34,64 @@ function App() {
   const [MoviesObject, setMoviesObject] = useState([]);
   const [Page, setPage] = useState(1)
   const [Query, setQuery] = useState(null)
+  const [ListGenre, setListGenre] = useState([])
   //--Mounting---------------
+  const GetGenre = async () => {
+    const reponsive = await fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=f07284f1ade881c56e1508bbd16a384c&language=en-US`)
+    const data = await reponsive.json();
+    setListGenre(data.genres)
+  }
+  useEffect(() => { GetGenre() }, [])
+  const SortByGenre = async (genre) => {
+    const reponsive = await fetch(`https://api.themoviedb.org/3/trending/movie/day?api_key=f07284f1ade881c56e1508bbd16a384c&page=2&genre=${genre}`)
+    const data = await reponsive.json();
+    setMoviesObject(data.results)
+  }
+
   const GetData = async () => {
     const reponsive = await fetch(`https://api.themoviedb.org/3/trending/movie/day?api_key=f07284f1ade881c56e1508bbd16a384c&page=${Page}`)
-    let data = await reponsive.json();
+    const data = await reponsive.json();
     setMoviesObject(MoviesObject.concat(data.results));
   }
   useEffect(() => { GetData() }, [Page]);
 
-  // updating------------------
-  const LoadMore = ()=>{
-    setPage(Page+1);
+  const Search = async () => {
+    const reponsive = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=f07284f1ade881c56e1508bbd16a384c&language=en-US&query=${Query}&page=1&include_adult=false`);
+    const data = await reponsive.json();
+    console.log('searchdata', data);
+    setMoviesObject(data.results);
   }
-  
-  // console.log('objectapi', MoviesObject && MoviesObject);
-  console.log('Query',  Query);
 
-  
+
+  // updating------------------
+  const LoadMore = () => {
+    setPage(Page + 1);
+  }
+
+  // console.log('objectapi', MoviesObject && MoviesObject);
+
+
+
   // render UI-----------------
   return (
     <div className="App">
 
       <Navbar bg="light" expand="lg">
-        <Navbar.Brand href="#home">HUYMovies</Navbar.Brand>
+        <Navbar.Brand href="#home" onClick={() => { window.location.reload(true) }}>HUYMovies</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
+            <Nav.Link onClick={() => { SortByGenre() }} href="#">Home</Nav.Link>
             <Nav.Link href="#link">Link</Nav.Link>
-            <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
+            <NavDropdown title="Movies by genre" id="basic-nav-dropdown">
+              {ListGenre.map((Genre) => {
+                return <NavDropdown.Item onClick={() => SortByGenre(Genre.name)} href="#action/3.1">{Genre.name}</NavDropdown.Item>
+              })}
             </NavDropdown>
           </Nav>
-          <Form inline onClick={Search()}>
-            <FormControl onChange={(e)=> setQuery(e.target.value)} type="text" placeholder="Search" className="mr-sm-2" />
-            <Button type={'submit'} variant="outline-success">Search</Button>
+          <Form inline onChange={(e) => setQuery(e.target.value)}>
+            <FormControl type="text" placeholder="Search" className="mr-sm-2" />
+            <Button onClick={() => { Search() }} variant="outline-success">Search</Button>
           </Form>
         </Navbar.Collapse>
       </Navbar>
@@ -100,7 +120,7 @@ function App() {
 
         </Row>
         <Button variant="secondary" size="lg" block
-          onClick={()=>{LoadMore()}}
+          onClick={() => { LoadMore() }}
         >
           Load more
         </Button>
@@ -110,3 +130,4 @@ function App() {
 }
 
 export default App;
+

@@ -14,6 +14,7 @@ Created with love by: Huy Tran
 
 [x] The user can sort genre of movies and load more movie (Just only show this genre what user is sorting).
 [x] At Carousel, user can click on link "See more" and  websites auto move to that movie.
+[x] User can watch trailer below the overview of movie.
 
 ## SHOULD HAVE FEATURES 🥇🏆
 [x] The user can enter a term into a search box to filter the currently loaded movies by search term. E.g.; the user can type "mar" and the results are reduced to show "Captain Marvel".

@@ -12,6 +12,7 @@ import CardMovie from './components/CardMovie'
 function App() {
   // declaring--------------
   const [MoviesObject, setMoviesObject] = useState([]); // 1.set Array to render deskcard
+  const [origMovies, setOrigMovies] = useState([]);
   const [isSort, setIsSort] = useState(false); // 1. check sorting
   const [Query, setQuery] = useState("") // 2. keyword to search
   const [Page, setPage] = useState(1) // 3.set Page from URL to get API
@@ -20,12 +21,13 @@ function App() {
   const [keyTrailer, setKeyTrailer] = useState(null) // 5.set link trailer (component:App->CardMovies->CardExpand)
   const [modalShow, setModalShow] = React.useState(false);// 6. check show modal (component:App->CardMovies->CardExpand)
 
-  const [rangeValue, setRangeValue] = useState({ 'min': 2, 'max': 10 })
+  const [rangeValue, setRangeValue] = useState({ 'min': 1, 'max': 10 })
   //--Mounting---------------
   const GetData = async () => {       //1.get API to set MoviesObject
     const reponsive = await fetch(`https://api.themoviedb.org/3/trending/movie/day?api_key=f07284f1ade881c56e1508bbd16a384c&page=${Page}`)
     const data = await reponsive.json();
-    const objectAdded = MoviesObject.concat(data.results);
+    const objectAdded = origMovies.concat(data.results);
+    setOrigMovies(objectAdded);
     setMoviesObject(objectAdded); //*<here>*
     if (isSort) {                    // if sorting, only show by sort
       SortByGenre(IdSortNow, objectAdded) // *objectAdded* from line above
@@ -65,6 +67,9 @@ function App() {
   }
 
 
+
+
+
   // updating------------------
   useEffect(() => { GetData() }, [Page]); //3.get API more when Page is changed
 
@@ -78,17 +83,13 @@ function App() {
         SortByGenre={SortByGenre}
         setQuery={setQuery}
         Search={Search}
-      />
-      {/* // creat input range */}
-      <Navbar bg="light" expand="lg"> 
-        <InputRange
-          maxValue={20}
-          minxValue={0}
-          value={rangeValue}
-          onChange={value => setRangeValue(value)}
-        />
-      </Navbar>
-
+        setRangeValue = {setRangeValue}
+        setMoviesObject={setMoviesObject}
+        rangeValue = {rangeValue}
+        setRangeValue = {setRangeValue}
+        origMovies = {origMovies}
+        /> 
+        
       <Container className={'container'}>
 
         <Row className={'row'}>

@@ -1,10 +1,27 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Navbar, NavDropdown,  Nav, Form, FormControl, Button, } from 'react-bootstrap';
+import InputRange from 'react-input-range';
 import 'react-input-range/lib/css/index.css';
 
 
+
+
+
 export default function NavbarSection(props) {
+
+
+    const onRatingSliderChange = (arr, val) => {
+        const newMovie = arr.filter((el) => {
+            if (el.vote_average > val.min && el.vote_average < val.max) {
+                return true
+            }
+            return false
+        })
+        props.setMoviesObject(newMovie)
+        props.setRangeValue(val)
+    }
+    
     return (
         <div>
             <Navbar bg="light" expand="lg">
@@ -25,8 +42,15 @@ export default function NavbarSection(props) {
                         <FormControl type="text" placeholder="Search" className="mr-sm-2" />
                         <Button onClick={() => { props.Search() }} variant="outline-success">Search</Button>
                     </Form>
+                                   
                 </Navbar.Collapse>
-            </Navbar>
+                 </Navbar>
+              
+                 <InputRange
+                    maxValue={10}
+                    minValue={0}
+                    value={props.rangeValue}
+                    onChange={value => onRatingSliderChange( props.origMovies, value)} />
         </div>
     )
 }
